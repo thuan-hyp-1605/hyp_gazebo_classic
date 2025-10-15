@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="hyp_only_lidar">
+    <include>
+      <uri>model://hyp</uri>
+    </include>
+
+    <!-- Put the LiDAR where you want it on the frame -->
+    <include>
+      <uri>model://lidar_mid360</uri>
+      <name>lidar1</name>
+      <pose>0.00 0.00 0.1 0 0 0</pose> <!-- x y z roll pitch yaw -->
+    </include>
+
+    <!-- Rigidly attach the LiDAR link to hyp base -->
+    <joint name="lidar1_joint" type="revolute">
+      <parent>hyp::base_link</parent>
+      <child>lidar1::lidar_mid360_link</child>
+    </joint>
+  </model>
+</sdf>
