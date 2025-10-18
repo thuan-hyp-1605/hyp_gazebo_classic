@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="hyp_camera_opt">
+
+    <!-- Include base hyp model -->
+    <include>
+      <uri>model://hyp</uri>
+    </include>
+
+    <!-- Include down-facing camera model -->
+    <include>
+      <uri>model://hyp_model_downcamera</uri>
+      <name>bottom_cam</name>
+      <pose>0 0 -0.05 0 0 0</pose>
+    </include>
+    <joint name="bottom_cam_joint" type="fixed">
+      <parent>hyp::base_link</parent>
+      <child>bottom_cam::link</child>
+    </joint>
+
+    <!-- Include ToF as FORWARD sensor, 2 cm ahead -->
+    <include>
+      <uri>model://hyp_model_downtof</uri>
+      <name>front_tof</name>
+      <!-- +X = forward 0.02 m, keep same Z -->
+      <pose>0.02 0 -0.05 0 0 0</pose>
+    </include>
+    <joint name="front_tof_joint" type="fixed">
+      <parent>hyp::base_link</parent>
+      <child>front_tof::link</child>
+    </joint>
+
+  </model>
+</sdf>

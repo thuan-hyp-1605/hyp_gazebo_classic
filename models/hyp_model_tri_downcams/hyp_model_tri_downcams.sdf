@@ -1,0 +1,111 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="hyp_model_tri_downcams">
+    <link name="link">
+      <!-- Link pose at origin -->
+      <pose>0 0 0 0 0 0</pose>
+
+      <!-- Lightweight inertial for the mount -->
+      <inertial>
+        <mass>0.03</mass>
+        <inertia>
+          <ixx>3e-05</ixx><ixy>0</ixy><ixz>0</ixz>
+          <iyy>3e-05</iyy><iyz>0</iyz>
+          <izz>3e-05</izz>
+        </inertia>
+      </inertial>
+
+      <!-- Simple collision just to keep physics stable -->
+      <collision name="collision">
+        <geometry><cylinder><radius>0.015</radius><length>0.004</length></cylinder></geometry>
+      </collision>
+
+      <!-- Optional visual mesh for the mount -->
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://hyp_model_tri_downcams/meshes/camera.stl</uri>
+            <scale>1 1 1</scale>
+          </mesh>
+        </geometry>
+      </visual>
+
+      <!--
+        Placement geometry (equilateral triangle on a single plane):
+        - Base (two bottom cameras) separation s = 0.05 m (5 cm).
+        - Triangle height H = s * sqrt(3) / 2 ≈ 0.04330127 m.
+        - Centroid offsets: top vertex = +2H/3, base line = -H/3.
+        - All cameras sit at z = 0 m (10 cm below the link).
+        - All cameras are pitched down by +90° (0 1.5708 0).
+        Coordinates (x, y, z):
+          Top     : ( 0.00000, +0.0288675, 0)
+          BottomL : (-0.02500, -0.0144338, 0)
+          BottomR : (+0.02500, -0.0144338, 0)
+      -->
+
+      <!-- ===== Top camera (downward) ===== -->
+      <sensor name="cam_top_down" type="camera">
+        <always_on>1</always_on>
+        <visualize>1</visualize>
+        <update_rate>30</update_rate>
+        <pose>0 0.0288675 0 0 1.5708 0</pose> <!-- x y z R P Y -->
+
+        <camera>
+          <horizontal_fov>1.047</horizontal_fov>
+          <image><width>640</width><height>400</height><format>R8G8B8</format></image>
+          <clip><near>0.1</near><far>100</far></clip>
+          <noise><type>gaussian</type><mean>0.0</mean><stddev>0.005</stddev></noise>
+        </camera>
+
+        <plugin name="ros_cam_top" filename="libgazebo_ros_camera.so">
+          <ros><namespace>/cameras</namespace></ros>
+          <frame_name>cameras/cam_top_down</frame_name>
+          <camera_name>cam_top_down</camera_name>
+        </plugin>
+      </sensor>
+
+      <!-- ===== Bottom-left camera (downward), base left vertex ===== -->
+      <sensor name="cam_bl_down" type="camera">
+        <always_on>1</always_on>
+        <visualize>1</visualize>
+        <update_rate>30</update_rate>
+        <pose>-0.025 -0.0144338 0 0 1.5708 0</pose>
+
+        <camera>
+          <horizontal_fov>1.047</horizontal_fov>
+          <image><width>640</width><height>400</height><format>R8G8B8</format></image>
+          <clip><near>0.1</near><far>100</far></clip>
+          <noise><type>gaussian</type><mean>0.0</mean><stddev>0.005</stddev></noise>
+        </camera>
+
+        <plugin name="ros_cam_bl" filename="libgazebo_ros_camera.so">
+          <ros><namespace>/cameras</namespace></ros>
+          <frame_name>cameras/cam_bl_down</frame_name>
+          <camera_name>cam_bl_down</camera_name>
+        </plugin>
+      </sensor>
+
+      <!-- ===== Bottom-right camera (downward), base right vertex ===== -->
+      <sensor name="cam_br_down" type="camera">
+        <always_on>1</always_on>
+        <visualize>1</visualize>
+        <update_rate>30</update_rate>
+        <pose>0.025 -0.0144338 0 0 1.5708 0</pose>
+
+        <camera>
+          <horizontal_fov>1.047</horizontal_fov>
+          <image><width>640</width><height>400</height><format>R8G8B8</format></image>
+          <clip><near>0.1</near><far>100</far></clip>
+          <noise><type>gaussian</type><mean>0.0</mean><stddev>0.005</stddev></noise>
+        </camera>
+
+        <plugin name="ros_cam_br" filename="libgazebo_ros_camera.so">
+          <ros><namespace>/cameras</namespace></ros>
+          <frame_name>cameras/cam_br_down</frame_name>
+          <camera_name>cam_br_down</camera_name>
+        </plugin>
+      </sensor>
+
+    </link>
+  </model>
+</sdf>

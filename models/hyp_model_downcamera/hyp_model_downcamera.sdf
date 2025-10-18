@@ -1,0 +1,84 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="hyp_model_downcamera">
+    <link name="link">
+      <pose>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.01</mass>
+        <inertia>
+          <ixx>1e-05</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1e-05</iyy>
+          <iyz>0</iyz>
+          <izz>1e-05</izz>
+        </inertia>
+      </inertial>
+
+      <!-- Collision: simple geometry for physics -->
+      <collision name="collision">
+        <geometry>
+          <cylinder>
+            <radius>0.01</radius>
+            <length>0.002</length>
+          </cylinder>
+        </geometry>
+      </collision>
+
+      <!-- Visual: STL mesh -->
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <!-- Place camera.stl at models/hyp_model_downcamera/meshes/camera.stl -->
+            <uri>model://hyp_model_downcamera/meshes/camera.stl</uri>
+            <scale>1 1 1</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <name>Gazebo/DarkGrey</name>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+          </script>
+        </material>
+      </visual>
+
+      <!-- Camera sensor, pitched down -->
+      <sensor name="hyp_model_downcamera" type="camera">
+        <always_on>1</always_on>
+        <visualize>1</visualize>
+        <update_rate>120</update_rate>
+
+        <!-- Aim camera straight down (pitch = +90°) -->
+        <pose>0 0 0 0 1.5708 0</pose>
+
+        <camera>
+          <horizontal_fov>1.047</horizontal_fov>
+          <image>
+            <width>640</width>
+            <height>400</height>
+            <format>R8G8B8</format>
+          </image>
+          <clip>
+            <near>0.1</near>
+            <far>100</far>
+          </clip>
+          <noise>
+            <type>gaussian</type>
+            <mean>0</mean>
+            <stddev>0.005</stddev>
+          </noise>
+        </camera>
+
+        <plugin name="camera_bottom" filename="libgazebo_ros_camera.so">
+          <ros>
+            <namespace>/cameras</namespace>
+          </ros>
+          <frame_name>cameras/down_cam</frame_name>
+          <camera_name>down</camera_name>
+          <hack_baseline>0.07</hack_baseline>
+        </plugin>
+      </sensor>
+    </link>
+  </model>
+</sdf>
